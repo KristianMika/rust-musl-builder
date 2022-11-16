@@ -15,6 +15,7 @@ For maximum stablity, use images with tags like `ekidd/rust-musl-builder:1.46.0`
 - Forked repo
 - Dockerhub account
 - Update zlib version to 1.2.13
+- Base image updated to Ubuntu 22.04
 ## 2021-12-23
 
 ### Added
