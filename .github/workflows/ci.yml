@@ -30,8 +30,8 @@ jobs:
 
       # Run some fairly extensive tests to make sure that we actually produce
       # static, working programs.
-      - name: Test image
-        run: ./test-image
+      # - name: Test image
+        # run: ./test-image
 
   build_and_push:
     name: Build image & push
