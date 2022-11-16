@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 For maximum stablity, use images with tags like `ekidd/rust-musl-builder:1.46.0` or `ekidd/rust-musl-builder:nightly-2020-08-26`. These may occasionally be rebuilt, but only while they're "current", or possibly if they're recent and serious security issues are discovered in a library.
 
+## 2022-11-16
+
+### Added
+- New stable release Rust 1.65, and nightly release from 2022-11-16
+
+### Changed
+- Forked repo
+- Dockerhub account
 ## 2021-12-23
 
 ### Added
