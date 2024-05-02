@@ -1,5 +1,4 @@
-# Use Ubuntu 22.04 LTS as our base image.
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # The Rust toolchain to use when building our image.  Set by `hooks/build`.
 ARG TOOLCHAIN=stable
@@ -9,7 +8,7 @@ ARG TOOLCHAIN=stable
 # - https://www.openssl.org/source/
 #
 # ALSO UPDATE hooks/build!
-ARG OPENSSL_VERSION=1.1.1m
+ARG OPENSSL_VERSION=3.2.0
 
 # Versions for other dependencies. Here are the places to check for new
 # releases:
@@ -24,13 +23,13 @@ ARG OPENSSL_VERSION=1.1.1m
 #
 # We're stuck on PostgreSQL 11 until we figure out
 # https://github.com/emk/rust-musl-builder/issues.
-ARG MDBOOK_VERSION=0.4.14
-ARG MDBOOK_GRAPHVIZ_VERSION=0.1.3
-ARG CARGO_ABOUT_VERSION=0.4.4
-ARG CARGO_AUDIT_VERSION=0.16.0
-ARG CARGO_DENY_VERSION=0.11.0
-ARG ZLIB_VERSION=1.2.13
-ARG POSTGRESQL_VERSION=11.14
+ARG MDBOOK_VERSION=0.4.37
+ARG MDBOOK_GRAPHVIZ_VERSION=0.2.0
+ARG CARGO_ABOUT_VERSION=0.6.1
+ARG CARGO_AUDIT_VERSION=0.20.0
+ARG CARGO_DENY_VERSION=0.14.22
+ARG ZLIB_VERSION=1.3.1
+ARG POSTGRESQL_VERSION=16.2
 
 # Make sure we have basic dev tools for building C libraries.  Our goal here is
 # to support the musl-libc builds and Cargo builds needed for a large selection
@@ -41,23 +40,23 @@ ARG POSTGRESQL_VERSION=11.14
 RUN apt-get update && \
     export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -yq \
-        build-essential \
-        cmake \
-        curl \
-        file \
-        git \
-        graphviz \
-        musl-dev \
-        musl-tools \
-        libpq-dev \
-        libsqlite-dev \
-        libssl-dev \
-        linux-libc-dev \
-        pkgconf \
-        sudo \
-        unzip \
-        xutils-dev \
-        && \
+    build-essential \
+    cmake \
+    curl \
+    file \
+    git \
+    graphviz \
+    musl-dev \
+    musl-tools \
+    libpq-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    linux-libc-dev \
+    pkgconf \
+    sudo \
+    unzip \
+    xutils-dev \
+    && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     useradd rust --user-group --create-home --shell /bin/bash --groups sudo
 
@@ -106,7 +105,7 @@ RUN echo "Building OpenSSL" && \
     cd /tmp && \
     short_version="$(echo "$OPENSSL_VERSION" | sed s'/[a-z]$//' )" && \
     curl -fLO "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz" || \
-        curl -fLO "https://www.openssl.org/source/old/$short_version/openssl-$OPENSSL_VERSION.tar.gz" && \
+    curl -fLO "https://www.openssl.org/source/old/$short_version/openssl-$OPENSSL_VERSION.tar.gz" && \
     tar xvzf "openssl-$OPENSSL_VERSION.tar.gz" && cd "openssl-$OPENSSL_VERSION" && \
     env CC=musl-gcc ./Configure no-shared no-zlib -fPIC --prefix=/usr/local/musl -DOPENSSL_NO_SECURE_MEMORY linux-x86_64 && \
     env C_INCLUDE_PATH=/usr/local/musl/include/ make depend && \
@@ -157,13 +156,13 @@ ENV RUSTUP_HOME=/opt/rust/rustup \
 # manually.
 RUN curl https://sh.rustup.rs -sSf | \
     env CARGO_HOME=/opt/rust/cargo \
-        sh -s -- -y --default-toolchain $TOOLCHAIN --profile minimal --no-modify-path && \
+    sh -s -- -y --default-toolchain $TOOLCHAIN --profile minimal --no-modify-path && \
     env CARGO_HOME=/opt/rust/cargo \
-        rustup component add rustfmt && \
+    rustup component add rustfmt && \
     env CARGO_HOME=/opt/rust/cargo \
-        rustup component add clippy && \
+    rustup component add clippy && \
     env CARGO_HOME=/opt/rust/cargo \
-        rustup target add x86_64-unknown-linux-musl
+    rustup target add x86_64-unknown-linux-musl
 ADD cargo-config.toml /opt/rust/cargo/config
 
 # Set up our environment variables so that we cross-compile using musl-libc by

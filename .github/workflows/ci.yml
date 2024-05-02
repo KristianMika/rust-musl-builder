@@ -2,13 +2,13 @@ name: Test and publish image
 
 on:
   # schedule:
-    # Rust tends to make stable releases every six weeks on Thursday 10am
-    # Pacific Time. Force a build a few hours later than that (every week) to
-    # scoop up the newest stable and beta (including patch releases).
-    #
-    # This way, even if we don't update the matrix below we should still have
-    # images.
-    # - cron: '0 21 * * THU'
+  # Rust tends to make stable releases every six weeks on Thursday 10am
+  # Pacific Time. Force a build a few hours later than that (every week) to
+  # scoop up the newest stable and beta (including patch releases).
+  #
+  # This way, even if we don't update the matrix below we should still have
+  # images.
+  # - cron: '0 21 * * THU'
   push:
     branches:
       - main
@@ -31,7 +31,7 @@ jobs:
       # Run some fairly extensive tests to make sure that we actually produce
       # static, working programs.
       # - name: Test image
-        # run: ./test-image
+      # run: ./test-image
 
   build_and_push:
     name: Build image & push
@@ -50,12 +50,12 @@ jobs:
         toolchain:
           - "stable"
           - "beta"
-          - "1.65.0"
+          - "1.78.0"
 
           # See https://rust-lang.github.io/rustup-components-history/ and choose
           # the newest nightly build that has all the components (except RLS,
           # which is obsolete).
-          - "nightly-2022-11-16"
+          # - "nightly-2022-11-16"
 
     steps:
       - name: Check out the repo
