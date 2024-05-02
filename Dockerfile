@@ -48,6 +48,7 @@ RUN apt-get update && \
     graphviz \
     musl-dev \
     musl-tools \
+    libicu-dev \
     libpq-dev \
     libsqlite3-dev \
     libssl-dev \
